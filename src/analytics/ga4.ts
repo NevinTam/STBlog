@@ -1,8 +1,7 @@
-// src/analytics/ga4.ts
 
 import ReactGA from 'react-ga4';
 
-const GA_MEASUREMENT_ID = 'G-L0KCEMVECM'; // Replace with your GA4 measurement ID
+const GA_MEASUREMENT_ID = 'G-L0KCEMVECM';
 
 export const initializeGA = () => {
   ReactGA.initialize(GA_MEASUREMENT_ID);

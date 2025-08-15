@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity, TextInput, FlatList, TouchableWithoutFeedback, Modal } from 'react-native';
-import { getAllPosts } from '../repository/postRepository'; // Ensure this function is available for fetching posts
-import { db } from '../../firebaseConfig'; // Import your Firebase config
+import { getAllPosts } from '../repository/postRepository';
+import { db } from '../../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { initializeGA, logPageView } from '../analytics/ga4';
 import Head from 'expo-router/head';
@@ -14,7 +14,6 @@ const fallbackMeta = {
   thumbnail: 'https://substackcdn.com/image/fetch/w_176,h_176,c_fill,f_webp,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F60c80449-366b-47dc-a711-17219ba57e61_463x427.png'
 };
 
-// CustomHeader Component
 function CustomHeader({ onSubscribePress }) {
   const { width: windowWidth } = useWindowDimensions();
   const headerFontSize = windowWidth < 1081 ? 24 : 32;
@@ -30,7 +29,7 @@ function CustomHeader({ onSubscribePress }) {
       </TouchableOpacity>
       <Text style={[styles.headerTitle, { fontSize: headerFontSize }]}>SeahawksToday </Text>
       {windowWidth < 1081 ? (
-        <TouchableOpacity style={styles.searchIcon} onPress={() => {/* Add functionality if needed */}}>
+        <TouchableOpacity style={styles.searchIcon} onPress={() => {}}>
         </TouchableOpacity>
       ) : (
         <>
@@ -52,7 +51,6 @@ function CustomHeader({ onSubscribePress }) {
   );
 }
 
-// Footer Component
 function Footer({ onSubscribePress }) {
   const router = useRouter();
   return (
@@ -73,7 +71,6 @@ function Footer({ onSubscribePress }) {
   );
 }
 
-// CustomSearchBar Component
 function CustomSearchBar() {
   const { width: windowWidth } = useWindowDimensions();
   const [searchText, setSearchText] = useState('');
@@ -96,20 +93,20 @@ function CustomSearchBar() {
   useEffect(() => {
     const results = allPosts.filter(post => post.title.toLowerCase().includes(searchText.toLowerCase()));
     setFilteredPosts(results);
-    setShowDropdown(searchText.length > 0); // Show dropdown if there's search text
+    setShowDropdown(searchText.length > 0);
   }, [searchText, allPosts]);
 
-  if (windowWidth < 1081) return null; // Hide search bar for small screens
+  if (windowWidth < 1081) return null;
 
   return (
     <View style={styles.searchContainer}>
       <TextInput
-        style={[styles.searchInput, { width: windowWidth < 1081 ? 50 : 200 }]} // Adjust width based on screen size
+        style={[styles.searchInput, { width: windowWidth < 1081 ? 50 : 200 }]}
         placeholder="Search..."
         value={searchText}
         onChangeText={text => setSearchText(text)}
         onFocus={() => setShowDropdown(true)}
-        onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // Delay hiding dropdown for user interaction
+        onBlur={() => setTimeout(() => setShowDropdown(false), 100)} 
       />
       {showDropdown && filteredPosts.length > 0 && (
         <View style={styles.dropdown}>
@@ -132,16 +129,14 @@ function CustomSearchBar() {
   );
 }
 
-// RootLayout Component
 export default function RootLayout() {
   const { width: windowWidth } = useWindowDimensions();
   const [modalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState('');
-  const { slug } = useLocalSearchParams(); // Get the slug from route params
+  const { slug } = useLocalSearchParams(); 
   const [currentPost, setCurrentPost] = useState(null);
 
   const handleSubscribePress = () => {
-    // Show the modal
     setModalVisible(true);
   };
   useEffect(() => {
@@ -157,7 +152,6 @@ export default function RootLayout() {
 
   const handleConfirmSubscription = async () => {
     try {
-      // Add the email to Firestore
       await addDoc(collection(db, 'subscriptions'), { email });
       setModalVisible(false);
       setEmail('');
@@ -174,7 +168,6 @@ export default function RootLayout() {
   useEffect(() => {
     const checkModalVisibility = async () => {
       try {
-        // Clear the modal flag to show the modal on each app visit
         await AsyncStorage.removeItem('hasShownModal');
         setModalVisible(true);
       } catch (error) {
@@ -248,7 +241,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#07083a', // Dark blue background for the entire screen
+    backgroundColor: '#07083a', 
   },
   headerContainer: {
     position: 'absolute',
@@ -256,10 +249,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#07083a', // Dark blue background for the header
-    paddingVertical: 18, // Reduced padding to minimize height
-    zIndex: 1, // Ensure the header is above other content
-    flexDirection: 'row', // Ensure buttons and search bar are in a row
+    backgroundColor: '#07083a',
+    paddingVertical: 18, 
+    zIndex: 1, 
+    flexDirection: 'row', 
   },
   headerContent: {
     flexDirection: 'row',
@@ -267,25 +260,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerImage: {
-    marginRight: 10, // Space between image and text
+    marginRight: 10, 
   },
   headerTitle: {
-    color: 'white', // White text color
+    color: 'white', 
     fontWeight: 'bold',
   },
   button: {
-    marginLeft: 10, // Space between buttons
-    backgroundColor: '#0A74DA', // Button background color
+    marginLeft: 10, 
+    backgroundColor: '#0A74DA', 
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white', // Button text color
+    color: 'white',
     fontWeight: 'bold',
   },
   searchContainer: {
-    position: 'relative', // For absolute positioning of the dropdown
+    position: 'relative',
     marginLeft: 10,
   },
   searchInput: {
@@ -303,7 +296,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     borderRadius: 5,
-    zIndex: 2, // Ensure the dropdown is above other content
+    zIndex: 2, 
   },
   dropdownItem: {
     padding: 10,
@@ -314,22 +307,20 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#07083a', // Dark blue background for the header
-    paddingVertical: 10, // Padding for vertical alignment
-    zIndex: 1, // Ensure the header is above other content
-    flexDirection: 'row', // Ensure image and text are in a row
+    backgroundColor: '#07083a', 
+    paddingVertical: 10, 
+    zIndex: 1, 
+    flexDirection: 'row', 
   },
   detailsHeaderImage: {
-    marginRight: 10, // Space between image and text
+    marginRight: 10,
   },
   detailsHeaderTitle: {
-    color: 'white', // White text color
+    color: 'white', 
     fontWeight: 'bold',
   },
   contentContainer: {
     paddingTop: 50,
-   // flex: 1,
-    // The height will be adjusted dynamically based on the screen width
   },
   searchIcon: {
     marginLeft: 10,
@@ -343,7 +334,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center', // Adjust spacing as needed
+    justifyContent: 'center', 
     backgroundColor: '#07083a',
     paddingVertical: 10,
   },
@@ -351,23 +342,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
     height: '100%',
-    //flex: 1,  // Fill the screen
-    justifyContent: 'center',  // Center vertically
-    alignItems: 'center',      // Center horizontally
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay background
+    justifyContent: 'center',  
+    alignItems: 'center',  
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContent: {
-    width: '80%',  // Adjust width as a percentage of the screen width
-    maxWidth: 400, // Optional: Max width to prevent it from being too large
+    width: '80%',  
+    maxWidth: 400, 
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
-    // Removed absolute positioning and transform
   },
   modalTitle: {
     fontSize: 18,
@@ -375,7 +364,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     overflow: 'hidden',
-    textOverflow: 'ellipsis', // Truncate text if it overflows
+    textOverflow: 'ellipsis',
   },
   modalInput: {
     width: '100%',
@@ -389,7 +378,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    paddingHorizontal: 10, // Add padding to make space for buttons
+    paddingHorizontal: 10, 
   },
   modalConfirmButton: {
     backgroundColor: '#0A74DA',
@@ -397,16 +386,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingRight: 20,
     alignItems: 'center',
-    flex: 1, // Take up space in the row
-    marginRight: 10, // Space between confirm and cancel buttons
+    flex: 1,
+    marginRight: 10, 
   },
   modalCancelButton: {
     backgroundColor: 'red',
     padding: 10,
     alignItems: 'center',
     borderRadius: 5,
-    flex: 1, // Take up space in the row
-    marginLeft: 5, // Space between confirm and cancel buttons
+    flex: 1, 
+    marginLeft: 5, 
   },
   modalButtonText: {
     color: 'white',

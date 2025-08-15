@@ -1,11 +1,10 @@
-// Import necessary components and libraries
 import { View, Text, ScrollView, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { getPost, getAllPosts } from '../repository/postRepository';
 import Markdown from 'react-native-markdown-display';
 import Head from 'expo-router/head';
-import { logPageView } from '../analytics/ga4'; // Import GA4 function
+import { logPageView } from '../analytics/ga4';
 
 export async function generateStaticParams(): Promise<Record<string, string>[]> {
     const posts = await getAllPosts();
@@ -14,7 +13,7 @@ export async function generateStaticParams(): Promise<Record<string, string>[]> 
 
 const PostDetailsPage = () => {
     const { slug } = useLocalSearchParams();
-    const [post, setPost] = useState(null); // Initial state as null
+    const [post, setPost] = useState(null);
     const { width: windowWidth } = useWindowDimensions();
     const isSmallScreen = windowWidth < 1081;
 
@@ -32,7 +31,6 @@ const PostDetailsPage = () => {
         logPageView();
     }, [slug]);
 
-    // Markdown styles
     const markdownStyles = StyleSheet.create({
         body: {
             fontSize: 16,
@@ -55,7 +53,6 @@ const PostDetailsPage = () => {
         },
     });
 
-    // Handle special pages
     if (slug === 'aboutPage') {
         return (
             <ScrollView

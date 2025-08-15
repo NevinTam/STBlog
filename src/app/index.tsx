@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, View, Text, Image, useWindowDimensions } from "react-native";
 import { getAllPosts } from "../repository/postRepository";
 import { Link } from "expo-router";
-import { Post } from "../types/post"; // Adjust the path as per your project structure
+import { Post } from "../types/post";
 
 const Page = () => {
   const windowWidth = useWindowDimensions().width;
@@ -10,18 +10,17 @@ const Page = () => {
 
   useEffect(() => {
     const fetchedPosts = getAllPosts();
-    setPosts(fetchedPosts.reverse()); // Reverse the order of the posts
+    setPosts(fetchedPosts.reverse());
   }, []);
 
   const numColumns = windowWidth < 1081 ? 2 : 4;
-  const itemWidth = windowWidth / numColumns - 20; // Subtract some space for margins
+  const itemWidth = windowWidth / numColumns - 20;
 
-  // Adjust itemHeight based on screen width
-  const itemHeight = windowWidth < 1081 ? itemWidth * 2 : itemWidth * 1.2; // Increase height for smaller screens
+  const itemHeight = windowWidth < 1081 ? itemWidth * 2 : itemWidth * 1.2;
 
-  const titleFontSize = windowWidth < 1081 ? 14 : 18; // Adjusted font size for title
-  const dateFontSize = windowWidth < 1081 ? 14 : 16; // Adjusted font size for date
-  const imageHeightAdjustment = windowWidth < 1081 ? 18 : 0; // Adjust height based on window width
+  const titleFontSize = windowWidth < 1081 ? 14 : 18;
+  const dateFontSize = windowWidth < 1081 ? 14 : 16;
+  const imageHeightAdjustment = windowWidth < 1081 ? 18 : 0;
 
   const renderItem = ({ item }: { item: Post }) => (
     <View style={[styles.postContainer, { width: itemWidth, height: itemHeight }]}>
@@ -29,7 +28,7 @@ const Page = () => {
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: item.thumbnail }}
-            style={[styles.postThumbnail, { width: itemWidth - 4, height: itemHeight - 44 + imageHeightAdjustment }]} // Adjusted to fit within border
+            style={[styles.postThumbnail, { width: itemWidth - 4, height: itemHeight - 44 + imageHeightAdjustment }]} 
             resizeMode="cover"
           />
           <View style={styles.titleContainer}>
@@ -56,7 +55,7 @@ const Page = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
         numColumns={numColumns}
-        key={numColumns} // Force re-render when numColumns changes
+        key={numColumns} 
       />
     </View>
   );
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-    marginTop: 40, // Adds 20 pixels of space between the top of the page and the first row of posts
+    marginTop: 40, 
   },
   postLink: {
     width: "100%",
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: "relative",
     width: "100%",
-    height: "85%", // Adjusted to leave space for title and date
+    height: "85%", 
   },
   postThumbnail: {
     height: "100%",
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: "rgba(191,163,68, 0.8)", // Semi-transparent gold
+    backgroundColor: "rgba(191,163,68, 0.8)", 
     paddingVertical: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 40, // Adjusted height for date container
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 10,
